@@ -26,25 +26,32 @@
 
 
 #### Image data under jaxa licence:
-![](img/Death_Valley_California_USA.png)
-![](img/Dead_Sea_Jordan-Israel.png)
+<p float="left">
+<img src="img/Death_Valley_California_USA.png" width="400" height="auto"/>  
+<img src="img/Dead_Sea_Jordan-Israel.png" width="400" height="auto"/>  
+</p>
 
-![](img/Mount_Everest_China-Nepal.png)
-![](img/New_York_USA.png)
-<br/>
+<p float="left">
+<img src="img/Mount_Everest_China-Nepal.png" width="400" height="auto"/>  
+<img src="img/New_York_USA.png" width="400" height="auto"/>  
+</p>
 
-![](img/Aconcagua_Argentina.png)
-![](img/Mount_Kilimanjaro_Tanzania.png)
-<br/>
+<p float="left">
+<img src="img/Aconcagua_Argentina.png" width="400" height="auto"/>  
+<img src="img/Mount_Kilimanjaro_Tanzania.png" width="400" height="auto"/>  
+</p>
 
-![](img/Qattara_Depression_Egypt.png)
-![](img/Salton_Sea_California_USA.png)
-<br/>
+<p float="left">
+<img src="img/Qattara_Depression_Egypt.png" width="400" height="auto"/>  
+<img src="img/Salton_Sea_California_USA.png" width="400" height="auto"/>  
+</p>
 
-![](img/Turpan_Depression_Xinjiang_China.png)
-![](img/Denali_Alaska_USA.png)
-<br/>
+<p float="left">
+<img src="img/Turpan_Depression_Xinjiang_China.png" width="400" height="auto"/>  
+<img src="img/Denali_Alaska_USA.png" width="400" height="auto"/>  
+</p>
 
-![](img/Halti_Norway-Finland.png)
-![](img/Caspian_Depression_Kazakhstan.png)
-<br/>
+<p float="left">
+<img src="img/Halti_Norway-Finland.png" width="400" height="auto"/>  
+<img src="img/Caspian_Depression_Kazakhstan.png" width="400" height="auto"/>  
+</p>
