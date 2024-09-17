@@ -22,4 +22,30 @@
 - Early exit by testing output tile corners for elevation data existence
 - multiprocessing
 - After optimization png encoder remains as a bottleneck
+- Level 10 output size 13GB
 
+
+#### Image data under jaxa licence:
+<img src="img/Death_Valley_California_USA.png" width="500" height="auto"/>  
+<img src="img/Dead_Sea_Jordan-Israel.png" width="500" height="auto"/>  
+<br/>
+
+<img src="img/Mount_Everest_China-Nepal.png" width="500" height="auto"/>  
+<img src="img/New_York_USA.png" width="500" height="auto"/>  
+<br/>
+
+<img src="img/Aconcagua_Argentina.png" width="500" height="auto"/>  
+<img src="img/Mount_Kilimanjaro_Tanzania.png" width="500" height="auto"/>  
+<br/>
+
+<img src="img/Qattara_Depression_Egypt.png" width="500" height="auto"/>  
+<img src="img/Salton_Sea_California_USA.png" width="500" height="auto"/>  
+<br/>
+
+<img src="img/Turpan_Depression_Xinjiang_China.png" width="500" height="auto"/>  
+<img src="img/Denali_Alaska_USA.png" width="500" height="auto"/>  
+<br/>
+
+<img src="img/Halti_Norway-Finland.png" width="500" height="auto"/>  
+<img src="img/Caspian_Depression_Kazakhstan.png" width="500" height="auto"/>  
+<br/>
