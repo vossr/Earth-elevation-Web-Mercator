@@ -1,5 +1,6 @@
 from scipy.interpolate import RegularGridInterpolator
 import numpy as np
+import os
 
 interpolator = None
 
@@ -9,6 +10,8 @@ def set_interpolator(getinterpolator):
     interpolator = getinterpolator
 
 def load_fast_geoid():
+    if not os.path.exists("geoid_heightmap.npy"):
+        os.system("python3 precompute_egm96_geoid_heightmap.py")
     global interpolator
     heightmap = np.load('geoid_heightmap.npy')
     latitudes = np.load('geoid_lat.npy')
