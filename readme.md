@@ -10,10 +10,11 @@
 - python3 -m pip install numpy pygeodesy rasterio opencv-python
 - download online egm96-5.pgm, EGM96 geoid (18 MB)
 
-#### Height format (custom)
-- Mapbox used the [pseudo base-256 rgb24 encoding](https://github.com/mapbox/rio-rgbify) because works with all image parsers, but then vertex shader has to spam the conversion
-- This generates pngs with signed uint16 data that can be converted to float gl texture
-- image = (image + 11000) * (65535 / (11000 + 11000))
+
+#### Encoding
+- The [pseudo base-256 rgb24 encoding](https://github.com/mapbox/rio-rgbify)
+- -10000 + ((R * 256 * 256 + G * 256 + B) * 0.1)
+- Runtime convert to float texture, so vertex shader don't need to spam the conversion
 
 #### Conversion speed
 - Precompute heightmap for egm96 (gravitational undulation calculations are slow)
@@ -21,7 +22,7 @@
 - Don't save tiles with no elevation data (image encoder slow)
 - Early exit by testing output tile corners for elevation data existence
 - multiprocessing
-- After optimization png encoder remains as a bottleneck
+- After optimization image encoder remains as a bottleneck
 - Level 10 output size 13GB
 
 

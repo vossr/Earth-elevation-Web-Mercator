@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 import multiprocessing
+from PIL import Image
+import cv2
 import numpy as np
 import time
-import cv2
-import os
 import math
+import os
 import sample_elevation
 import sample_geoid_fast
 
@@ -36,6 +37,17 @@ def does_height_data_exist_at(z, x, y):
     if allnone:
         return False
     return True
+
+def encode_elevation_to_rgb(elevation_array):
+    data_min_value = 10000 
+    data = (elevation_array + data_min_value) / 0.1
+    data = data.astype(np.uint32)
+    
+    rgb = np.zeros((*data.shape, 3), dtype=np.uint8)
+    rgb[..., 0] = (data // (256*256)) % 256
+    rgb[..., 1] = (data // 256) % 256
+    rgb[..., 2] = data % 256
+    return rgb
 
 def gen_tile_heightmap(z, x, y):
     upper_left, upper_right, lower_left, lower_right = get_tile_corners(z, x, y)
@@ -78,6 +90,12 @@ def gen_tile_heightmap(z, x, y):
     # Value “0m” is stored in sea pixels
     image[image <= -9999] = 0.0
 
+    # image = encode_elevation_to_rgb(image)
+    # out_filename = f"{z}/{x}/{y}.webp"
+    # os.makedirs(os.path.dirname(out_filename), exist_ok=True)
+    # img = Image.fromarray(image)
+    # img.save(out_filename, format='WEBP', quality=85, method=6)
+
     image = (image + 11000) * (65535 / (11000 + 11000))
     image = image.astype(np.uint16)
 
@@ -90,10 +108,8 @@ start_time = time.time()
 def thread_generate(n, z, x, start_y, end_y):
     sample_geoid_fast.set_interpolator(interpolator)
     for y in range(start_y, end_y):
-        out_filename = f"{z}/{x}/{y}.png"
-        if not os.path.exists(out_filename):
-            if does_height_data_exist_at(z, x, y):
-                gen_tile_heightmap(z, x, y)
+        if does_height_data_exist_at(z, x, y):
+            gen_tile_heightmap(z, x, y)
 
 def generate_all_tiles_of_level(z):
     n = 2 ** z # number of tiles width or height at depth z
@@ -119,4 +135,9 @@ def generate_all_tiles_of_level(z):
             process.join()
 
 if __name__ == "__main__":
-    generate_all_tiles_of_level(10)
+    # generate_all_tiles_of_level(5)
+    # generate_all_tiles_of_level(6)
+    # generate_all_tiles_of_level(7)
+    generate_all_tiles_of_level(8)
+    # generate_all_tiles_of_level(10)
+    # generate_all_tiles_of_level(10)
