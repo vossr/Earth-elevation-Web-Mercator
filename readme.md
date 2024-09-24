@@ -1,5 +1,7 @@
 
-### AW3D30 to WGS84 Web Mercator zxy quadtree conversion
+<img src="img/globe.gif" width="400" height="auto"/>  
+
+### JAXA AW3D30 to WGS84 Web Mercator zxy quadtree conversion
 - [jaxa description](https://www.eorc.jaxa.jp/ALOS/en/dataset/aw3d30/aw3d30_e.htm)
 - [opentopography description](https://portal.opentopography.org/raster?opentopoID=OTALOS.112016.4326.2)
 
@@ -10,20 +12,25 @@
 - python3 -m pip install numpy pygeodesy rasterio opencv-python
 - download online egm96-5.pgm, EGM96 geoid (18 MB)
 
-
-#### Encoding
+#### Elevation encoding
 - The [pseudo base-256 rgb24 encoding](https://github.com/mapbox/rio-rgbify)
 - -10000 + ((R * 256 * 256 + G * 256 + B) * 0.1)
 - Runtime convert to float texture, so vertex shader don't need to spam the conversion
 
-#### Conversion speed
+#### Usage
+- edit `generate_webmercator.py` select res and z  
+- `python3 generate_webmercator.py`  
+- `python3 generate_upper_levels.py` fast combine quadtree 2x2 tiles to upper tiles  
+- can gdal_translate to .mbtiles (SQLite database caches to RAM)  
+
+#### Conversion speed optimizations
 - Precompute heightmap for egm96 (gravitational undulation calculations are slow)
 - Operate with lists instead of single elevation samples
 - Don't save tiles with no elevation data (image encoder slow)
 - Early exit by testing output tile corners for elevation data existence
 - multiprocessing
 - After optimization image encoder remains as a bottleneck
-- Level 10 output size 13GB
+- Level 9 output size 13GB
 
 
 #### Image data under jaxa licence:
