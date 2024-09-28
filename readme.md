@@ -1,7 +1,7 @@
 #### Try here:
- - Globe: https://vossr.github.io/Earth-elevation-Web-Mercator/example_minimal-globe/index.html  
- - MapLibre GL JS: https://vossr.github.io/Earth-elevation-Web-Mercator/example_maplibre/index.html  
- - Mapbox GL JS: https://vossr.github.io/Earth-elevation-Web-Mercator/example_mapbox/index.html  
+ - Globe: ⠀⠀⠀⠀⠀⠀ https://vossr.github.io/Earth-elevation-Web-Mercator/example_minimal-globe
+ - MapLibre GL JS: https://vossr.github.io/Earth-elevation-Web-Mercator/example_maplibre
+ - Mapbox GL JS:⠀ https://vossr.github.io/Earth-elevation-Web-Mercator/example_mapbox
 
 <img src="img/aw3d30_earth.gif" width="400" height="auto"/>  
 
