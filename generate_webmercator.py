@@ -10,8 +10,8 @@ import sample_elevation
 import sample_geoid_fast
 import encoding
 
-out_tilesize = 256
-# out_tilesize = 512
+# out_tilesize = 256
+out_tilesize = 512
 
 @dataclass
 class LatLon:
@@ -42,16 +42,33 @@ def does_height_data_exist_at(z, x, y):
         return False
     return True
 
-def encode_elevation_to_rgb(elevation_array):
-    data_min_value = 10000 
-    data = (elevation_array + data_min_value) / 0.1
-    data = data.astype(np.uint32)
-    
-    rgb = np.zeros((*data.shape, 3), dtype=np.uint8)
-    rgb[..., 0] = (data // (256*256)) % 256
-    rgb[..., 1] = (data // 256) % 256
-    rgb[..., 2] = data % 256
-    return rgb
+def gen_tile_heightmap_geoid_only(z, x, y, tilesize):
+    upper_left, upper_right, lower_left, lower_right = get_tile_corners(z, x, y)
+
+    # precompute lerps
+    row_lats = np.linspace(upper_left.lat, lower_left.lat, tilesize)
+    col_lons = np.linspace(upper_left.lon, upper_right.lon, tilesize)
+    lat_interp = np.linspace(upper_right.lat, lower_right.lat, tilesize)
+    lon_interp = np.linspace(lower_left.lon, lower_right.lon, tilesize)
+
+    pixel_centers_lat = []
+    pixel_centers_lon = []
+    for yi in range(tilesize):
+        top_lat = row_lats[yi]
+        bottom_lat = lat_interp[yi]
+        for xi in range(tilesize):
+            left_lon = col_lons[xi]
+            right_lon = lon_interp[xi]
+
+            pixel_center_lat = top_lat + (bottom_lat - top_lat) * (xi / (tilesize - 1))
+            pixel_center_lon = left_lon + (right_lon - left_lon) * (xi / (tilesize - 1))
+            pixel_centers_lat.append(pixel_center_lat)
+            pixel_centers_lon.append(pixel_center_lon)
+
+    image = np.array([sample_geoid_fast.get_geoid_height(lat, lon) for lat, lon in zip(pixel_centers_lat, pixel_centers_lon)])
+    image = image.astype(float)
+    image = np.reshape(image, (tilesize, tilesize))
+    return image
 
 def gen_tile_heightmap(z, x, y):
     upper_left, upper_right, lower_left, lower_right = get_tile_corners(z, x, y)
@@ -112,8 +129,8 @@ start_time = time.time()
 def thread_generate(n, z, x, start_y, end_y):
     sample_geoid_fast.set_interpolator(interpolator)
     for y in range(start_y, end_y):
-        # if does_height_data_exist_at(z, x, y):
-        gen_tile_heightmap(z, x, y)
+        if does_height_data_exist_at(z, x, y):
+            gen_tile_heightmap(z, x, y)
 
 def generate_all_tiles_of_level(z):
     n = 2 ** z # number of tiles width or height at depth z
@@ -139,9 +156,14 @@ def generate_all_tiles_of_level(z):
             process.join()
 
 if __name__ == "__main__":
+    # gen_tile_heightmap(10, 545, 357)
+    # gen_tile_heightmap(7, 68, 44)
+    # gen_tile_heightmap(7, 68, 45)
+    # gen_tile_heightmap(7, 67, 43)
+    # gen_tile_heightmap(7, 67, 44)
+
+
     # generate_all_tiles_of_level(5)
-    # generate_all_tiles_of_level(6)
+    generate_all_tiles_of_level(6)
     # generate_all_tiles_of_level(7)
-    generate_all_tiles_of_level(8)
-    # generate_all_tiles_of_level(10)
-    # generate_all_tiles_of_level(10)
+    # generate_all_tiles_of_level(8)
