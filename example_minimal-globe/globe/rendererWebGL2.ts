@@ -247,8 +247,12 @@ export class Renderer {
     }
 
     async #initShaderProgram() {
-        const vsSource = await this.#fileToString(window.location.href + 'globe/texture_vertex.glsl');
-        const fsSource = await this.#fileToString(window.location.href + 'globe/texture_frag.glsl');
+        let urlstr: string = window.location.href;
+        if (urlstr.endsWith('index.html')) {
+            urlstr = urlstr.substring(0, urlstr.length - 'index.html'.length);
+        }
+        const vsSource = await this.#fileToString(urlstr + 'globe/texture_vertex.glsl');
+        const fsSource = await this.#fileToString(urlstr + 'globe/texture_frag.glsl');
 
         const vertexShader = this.#compileShader(vsSource, this.gl!.VERTEX_SHADER)!;
         const fragmentShader = this.#compileShader(fsSource, this.gl!.FRAGMENT_SHADER)!;
