@@ -10,12 +10,12 @@ def set_interpolator(getinterpolator):
     interpolator = getinterpolator
 
 def load_fast_geoid():
-    if not os.path.exists("geoid_heightmap.npy"):
+    if not os.path.exists("geoid/geoid_heightmap.npy"):
         os.system("python3 precompute_egm96_geoid_heightmap.py")
     global interpolator
-    heightmap = np.load('geoid_heightmap.npy')
-    latitudes = np.load('geoid_lat.npy')
-    longitudes = np.load('geoid_lon.npy')
+    heightmap = np.load('geoid/geoid_heightmap.npy')
+    latitudes = np.load('geoid/geoid_lat.npy')
+    longitudes = np.load('geoid/geoid_lon.npy')
     return RegularGridInterpolator((latitudes, longitudes), heightmap, bounds_error=False, fill_value=None)
 
 def get_geoid_height(lat, lon):

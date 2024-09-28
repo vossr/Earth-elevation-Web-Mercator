@@ -1,8 +1,9 @@
 from pygeodesy.geoids import GeoidKarney
 import multiprocessing
 import numpy as np
+import os
 
-slow_geoid = GeoidKarney("./egm96-5.pgm")
+slow_geoid = GeoidKarney("./geoid/egm96-5.pgm")
 
 def worker_function(lat_range, lon_range):
     partial_heightmap = []
@@ -27,9 +28,10 @@ def precompute_fast_geoid():
         results = pool.starmap(worker_function, [(chunk, longitudes) for chunk in lat_chunks])
 
     heightmap = np.vstack(results)
-    np.save('geoid_heightmap.npy', heightmap)
-    np.save('geoid_lat.npy', latitudes)
-    np.save('geoid_lon.npy', longitudes)
+    os.makedirs('geoid', exist_ok=True)
+    np.save('geoid/geoid_heightmap.npy', heightmap)
+    np.save('geoid/geoid_lat.npy', latitudes)
+    np.save('geoid/geoid_lon.npy', longitudes)
 
 if __name__ == "__main__":
     precompute_fast_geoid()
