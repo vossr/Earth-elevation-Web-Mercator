@@ -1,0 +1,21 @@
+{
+  "name": "minimal-globe",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "author": "vossr",
+  "license": "MIT",
+  "dependencies": {
+    "gl-matrix": "^3.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.5",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.4.4",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
