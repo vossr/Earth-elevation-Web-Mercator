@@ -1,3 +1,7 @@
+#### Try here:
+ - Globe: https://vossr.github.io/Earth-elevation-Web-Mercator/example_minimal-globe/index.html  
+ - MapLibre GL JS: https://vossr.github.io/Earth-elevation-Web-Mercator/example_maplibre/index.html  
+ - Mapbox GL JS: https://vossr.github.io/Earth-elevation-Web-Mercator/example_mapbox/index.html  
 
 <img src="img/aw3d30_earth.gif" width="400" height="auto"/>  
 
@@ -20,7 +24,7 @@
 #### Usage
 - edit `generate_webmercator.py` select res and z  
 - `python3 generate_webmercator.py`  
-- `python3 generate_upper_levels.py` fast combine quadtree 2x2 tiles to upper tiles  
+- `python3 generate_lower_levels.py` fast combine quadtree 2x2 tiles to upper tiles  
 - can gdal_translate to .mbtiles (SQLite database caches to RAM)  
 
 #### Conversion speed optimizations
@@ -32,6 +36,10 @@
 - After optimization image encoder remains as a bottleneck
 - Level 9 output size 13GB
 
+#### License
+- JAXA AW3D30 https://earth.jaxa.jp/en/data/policy/
+- My code CC0
+- Maplibre, Mapbox something other
 
 #### Image data under jaxa licence:
 <p float="left">
