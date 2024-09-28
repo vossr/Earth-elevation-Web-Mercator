@@ -3,3 +3,4 @@ maptiles/*
 AW3D30_global.vrt
 generated_tiles*
 geoid/*
+*__pycache__*

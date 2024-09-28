@@ -1,13 +1,17 @@
 from dataclasses import dataclass
 import multiprocessing
 from PIL import Image
-import cv2
 import numpy as np
 import time
 import math
+import cv2
 import os
 import sample_elevation
 import sample_geoid_fast
+import encoding
+
+out_tilesize = 256
+# out_tilesize = 512
 
 @dataclass
 class LatLon:
@@ -51,26 +55,25 @@ def encode_elevation_to_rgb(elevation_array):
 
 def gen_tile_heightmap(z, x, y):
     upper_left, upper_right, lower_left, lower_right = get_tile_corners(z, x, y)
-    image = np.zeros((256, 256))
+    image = np.zeros((out_tilesize, out_tilesize))
 
     # precompute lerps
-    row_lats = np.linspace(upper_left.lat, lower_left.lat, 256)
-    col_lons = np.linspace(upper_left.lon, upper_right.lon, 256)
-    lat_interp = np.linspace(upper_right.lat, lower_right.lat, 256)
-    lon_interp = np.linspace(lower_left.lon, lower_right.lon, 256)
+    row_lats = np.linspace(upper_left.lat, lower_left.lat, out_tilesize)
+    col_lons = np.linspace(upper_left.lon, upper_right.lon, out_tilesize)
+    lat_interp = np.linspace(upper_right.lat, lower_right.lat, out_tilesize)
+    lon_interp = np.linspace(lower_left.lon, lower_right.lon, out_tilesize)
 
     pixel_centers_lat = []
     pixel_centers_lon = []
-    for yi in range(256):
-        # print(y, yi / 255)
+    for yi in range(out_tilesize):
         top_lat = row_lats[yi]
         bottom_lat = lat_interp[yi]
-        for xi in range(256):
+        for xi in range(out_tilesize):
             left_lon = col_lons[xi]
             right_lon = lon_interp[xi]
 
-            pixel_center_lat = top_lat + (bottom_lat - top_lat) * (xi / 255)
-            pixel_center_lon = left_lon + (right_lon - left_lon) * (xi / 255)
+            pixel_center_lat = top_lat + (bottom_lat - top_lat) * (xi / (out_tilesize - 1))
+            pixel_center_lon = left_lon + (right_lon - left_lon) * (xi / (out_tilesize - 1))
             pixel_centers_lat.append(pixel_center_lat)
             pixel_centers_lon.append(pixel_center_lon)
 
@@ -82,7 +85,7 @@ def gen_tile_heightmap(z, x, y):
     #add egm96 elevation offset
     pixel_elevations += np.array([sample_geoid_fast.get_geoid_height(lat, lon) for lat, lon in zip(pixel_centers_lat, pixel_centers_lon)])
 
-    image = np.reshape(pixel_elevations, (256, 256))
+    image = np.reshape(pixel_elevations, (out_tilesize, out_tilesize))
 
 
     # Page 7 https://www.eorc.jaxa.jp/ALOS/en/dataset/aw3d30/data/aw3d30v3.2_product_e_e1.2.pdf
@@ -90,26 +93,27 @@ def gen_tile_heightmap(z, x, y):
     # Value “0m” is stored in sea pixels
     image[image <= -9999] = 0.0
 
-    # image = encode_elevation_to_rgb(image)
-    # out_filename = f"{z}/{x}/{y}.webp"
-    # os.makedirs(os.path.dirname(out_filename), exist_ok=True)
-    # img = Image.fromarray(image)
-    # img.save(out_filename, format='WEBP', quality=85, method=6)
+    image = encoding.encode_mapbox_terrain_v1_elevation(image)
 
-    image = (image + 11000) * (65535 / (11000 + 11000))
-    image = image.astype(np.uint16)
-
-    out_filename = f"{z}/{x}/{y}.png"
+    out_filename = f"generated_tiles/{z}/{x}/{y}.png"
     os.makedirs(os.path.dirname(out_filename), exist_ok=True)
     cv2.imwrite(out_filename, image)
 
+    # out_filename = f"generated_tiles/{z}/{x}/{y}.webp"
+    # os.makedirs(os.path.dirname(out_filename), exist_ok=True)
+    # image[..., [0, 2]] = image[..., [2, 0]]  # Swap R (index 0) and B (index 2)
+    # image = Image.fromarray(image)
+    # image.save(out_filename, format='WEBP', quality=100, method=6)
+    # img.save(out_filename, format='WEBP', quality=70, method=0)
+
 interpolator = sample_geoid_fast.load_fast_geoid()
+sample_geoid_fast.set_interpolator(interpolator)#set if calling only gen_tile_heightmap
 start_time = time.time()
 def thread_generate(n, z, x, start_y, end_y):
     sample_geoid_fast.set_interpolator(interpolator)
     for y in range(start_y, end_y):
-        if does_height_data_exist_at(z, x, y):
-            gen_tile_heightmap(z, x, y)
+        # if does_height_data_exist_at(z, x, y):
+        gen_tile_heightmap(z, x, y)
 
 def generate_all_tiles_of_level(z):
     n = 2 ** z # number of tiles width or height at depth z
