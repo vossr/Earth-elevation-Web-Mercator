@@ -29,7 +29,7 @@ export class MapQuadTreeNode {
         this.children = [null, null, null, null];
         this.img = null;
         this.squareMesh = null;
-        this.imageUrl = `https://vossr.github.io/Earth-elevation-Web-Mercator/generated_tiles/{z}/{x}/{y}.png`
+        this.imageUrl = `https://vossr.github.io/Earth-elevation-Web-Mercator/generated_tiles/${z}/${x}/${y}.png`
         // this.imageUrl = `/generated_tiles/${z}/${x}/${y}.png`;
         // this.imageUrl = `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
         // this.imageUrl = `https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}.png`;
