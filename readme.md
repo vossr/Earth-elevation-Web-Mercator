@@ -1,5 +1,5 @@
 
-<img src="img/globe.gif" width="400" height="auto"/>  
+<img src="img/aw3d30_earth.gif" width="400" height="auto"/>  
 
 ### JAXA AW3D30 to WGS84 Web Mercator zxy quadtree conversion
 - [jaxa description](https://www.eorc.jaxa.jp/ALOS/en/dataset/aw3d30/aw3d30_e.htm)
@@ -13,9 +13,9 @@
 - download online egm96-5.pgm, EGM96 geoid (18 MB)
 
 #### Elevation encoding
-- The [pseudo base-256 rgb24 encoding](https://github.com/mapbox/rio-rgbify)
+- The pseudo base-256 rgb24 encoding
 - -10000 + ((R * 256 * 256 + G * 256 + B) * 0.1)
-- Runtime convert to float texture, so vertex shader don't need to spam the conversion
+- Can runtime decode to float texture, so vertex shader don't need to spam the conversion
 
 #### Usage
 - edit `generate_webmercator.py` select res and z  
